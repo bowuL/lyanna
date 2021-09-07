@@ -290,6 +290,9 @@ async def list_tags(request: Request) -> HTTPResponse:
 async def list_topics(request: Request) -> HTTPResponse:
     topics = await SpecialTopic.sync_all()
     total = len(topics)
+    for topic in topics:
+        topic['created_at'] = topic['created_at'].strftime('%Y-%m-%d %H:%M')
+    topics = sorted(topics, key=lambda t: t['id'])
     return response.json({'items': topics, 'total': total})
 
 

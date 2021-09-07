@@ -1,3 +1,5 @@
+import asyncio
+import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -154,5 +156,19 @@ async def sitemap(request):
 # app.error_handler.add(Exception, server_error_handler)
 
 
+async def get_port():
+    args = sys.argv
+    try:
+        index = args.index('-p')
+    except ValueError:
+        return 8000
+    try:
+        return int(args[index + 1])
+    except IndexError:
+        return 8000
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=config.DEBUG)
+    print('-' * 80, sys.argv)
+    port = asyncio.run(get_port())
+    print(port)
+    app.run(host='0.0.0.0', port=port, debug=config.DEBUG)
